@@ -1,1 +1,35 @@
+name: Update README Date
 
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 0 * * *'
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # 如果你使用 Python 脚本，保留下面这部分
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Run update script
+        # 确保这里的脚本名称和路径与你创建的一致
+        run: python update_readme.py 
+        # 如果你使用 Shell 脚本，请用下面这两行替换上面的 run 命令
+        # run: |
+        #   chmod +x update_readme.sh
+        #   ./update_readme.sh
+
+      - name: Commit and push changes
+        run: |
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+          git add README.md
+          git diff --quiet && git diff --staged --quiet || git commit -m "CI: Auto update README date"
+          git push
