@@ -8,6 +8,10 @@ on:
 jobs:
   update:
     runs-on: ubuntu-latest
+    # ================= 关键修改部分 ================= #
+    # 为这个任务授予写入仓库内容的权限
+    permissions:
+      contents: write
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
